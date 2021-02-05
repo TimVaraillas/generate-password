@@ -1,5 +1,7 @@
 # generate-password
 
+Simple Vue 2 application to generate passwords by specifying custom parameters such as password length, number of uppercases, lowercases, digits or symbols.
+
 ## Project setup
 ```
 npm install
