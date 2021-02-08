@@ -89,14 +89,22 @@
               <span class="password">{{ password }}</span>
             </v-col>
             <v-col class="shrink d-flex">
-              <v-btn class="mr-2" color="primary" @click="generate()">
-                Regénérer
-                <v-icon dense right>mdi-refresh</v-icon>
-              </v-btn>
-              <v-btn v-if="canCopy" @click="copy(password)">
-                Copier
-                <v-icon dense right>mdi-content-copy</v-icon>
-              </v-btn>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn class="mr-2" color="primary" v-bind="attrs" v-on="on" @click="generatePassword()">
+                    <v-icon dense>mdi-refresh</v-icon>
+                  </v-btn>
+                </template>
+                <span>Regénérer</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-if="canCopy" v-bind="attrs" v-on="on" @click="copyPassword()">
+                    <v-icon dense>mdi-content-copy</v-icon>
+                  </v-btn>
+                </template>
+                <span>Copier</span>
+              </v-tooltip>
             </v-col>
           </v-row>
         </v-alert>
@@ -122,7 +130,7 @@ export default {
     canCopy: false,
   }),
   mounted() {
-    this.generate();
+    this.generatePassword();
     this.canCopy = !!navigator.clipboard;
   },
   watch: {
@@ -133,8 +141,9 @@ export default {
       if (this.total > this.length) {
         this.decrement();
       }
-      this.generate();
+      this.generatePassword();
     },
+
     upper() {
       if (this.total < this.length) {
         this.increment();
@@ -142,8 +151,9 @@ export default {
       if (this.total > this.length) {
         this.decrement('upper');
       }
-      this.generate();
+      this.generatePassword();
     },
+
     digit() {
       if (this.total < this.length) {
         this.increment();
@@ -151,8 +161,9 @@ export default {
       if (this.total > this.length) {
         this.decrement('digit');
       }
-      this.generate();
+      this.generatePassword();
     },
+
     symbol() {
       if (this.total < this.length) {
         this.increment();
@@ -160,7 +171,7 @@ export default {
       if (this.total > this.length) {
         this.decrement('symbol');
       }
-      this.generate();
+      this.generatePassword();
     },
   },
   computed: {
@@ -198,10 +209,12 @@ export default {
         }
       }
     },
-    async copy(str) {
-      await navigator.clipboard.writeText(str);
+
+    async copyPassword() {
+      await navigator.clipboard.writeText(this.password);
     },
-    scorePassword() {
+
+    setPasswordScore() {
       this.score = 0;
       // award every unique letter until 5 repetitions
       var letters = new Object();
@@ -222,20 +235,25 @@ export default {
       }
       this.score += (variationCount - 1) * 10;
     },
+
     getRandomUpperCase() {
       return String.fromCharCode(Math.floor(Math.random()*26)+65);
     },
+
     getRandomLowerCase() {
       return String.fromCharCode(Math.floor(Math.random()*26)+97);
     },
+
     getRandomDigit(){
       return String.fromCharCode(Math.floor(Math.random()*10)+48);
     },
+
     getRandomSymbol(){
       const symbol = "!@#$%^&*(){}[]=<>/,.|~?";
       return symbol[Math.floor(Math.random()*symbol.length)];
     },
-    generate(){
+
+    generatePassword(){
       let characters = [];
       for (let i=0; i<this.upper; i++) {
         characters.push(this.getRandomUpperCase());
@@ -250,17 +268,17 @@ export default {
         characters.push(this.getRandomSymbol());
       }
       this.password = shuffle(characters).join('');
-      this.scorePassword();
+      this.setPasswordScore();
     }
   }
 }
 </script>
 
 <style lang="scss">
-  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
   
   .password {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Roboto Mono', monospace;
   }
 
   .progress {
