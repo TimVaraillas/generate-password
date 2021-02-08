@@ -11,14 +11,14 @@
       <v-card-text>
         <v-row>
           <v-col>
+            <label>Longueur</label>
             <v-slider
               v-model="length"
-              label="Longueur"
               min="4"
               max="50"
             ></v-slider>
           </v-col>
-          <v-col>
+          <v-col class="d-flex align-center">
             <span>{{ length }}</span>
           </v-col>
         </v-row>
@@ -27,14 +27,14 @@
       <v-card-text>
         <v-row>
           <v-col>
+            <label>Majuscules</label>
             <v-slider
-              label="Majuscules" 
               v-model="upper"
               :max="length"
               min="0"
             ></v-slider>
           </v-col>
-          <v-col>
+          <v-col class="d-flex align-center">
             <span>{{ upper }}</span>
           </v-col>
         </v-row>
@@ -43,14 +43,14 @@
       <v-card-text>
         <v-row>
           <v-col>
+            <label>Chiffres</label>
             <v-slider
-              label="Chiffres" 
               v-model="digit"
               :max="length"
               min="0"
             ></v-slider>
           </v-col>
-          <v-col>
+          <v-col class="d-flex align-center">
             <span>{{ digit }}</span>
           </v-col>
         </v-row>
@@ -59,14 +59,14 @@
       <v-card-text>
         <v-row>
           <v-col>
+            <label>Caractères spéciaux</label>
             <v-slider
-              label="Caractères spéciaux" 
               v-model="symbol"
               :max="length"
               min="0"
             ></v-slider>
           </v-col>
-          <v-col>
+          <v-col class="d-flex align-center">
             <span>{{ symbol }}</span>
           </v-col>
         </v-row>
@@ -75,13 +75,17 @@
       <v-alert prominent class="ma-2 mb-6" color="grey lighten-3">
         <v-row align="center">
           <v-col class="grow">
-            {{ id }}
+            <span class="password">{{ id }}</span>
           </v-col>
-          <v-col class="shrink">
-            <v-btn dark @click="generate()">Regénérer</v-btn>
-          </v-col>
-          <v-col class="shrink">
-            <v-btn v-if="canCopy" @click="copy(id)">Copier</v-btn>
+          <v-col class="shrink d-flex">
+            <v-btn class="mr-2" color="primary" @click="generate()">
+              Regénérer
+              <v-icon dense right>mdi-refresh</v-icon>
+            </v-btn>
+            <v-btn v-if="canCopy" @click="copy(id)">
+              Copier
+              <v-icon dense right>mdi-content-copy</v-icon>
+            </v-btn>
           </v-col>
         </v-row>
       </v-alert>
@@ -216,3 +220,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+  
+  .password {
+    font-family: 'Courier Prime', monospace;
+  }
+</style>

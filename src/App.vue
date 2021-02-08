@@ -1,9 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      dark
-    >
+    <v-app-bar app dark color="primary">
       <v-container>
           <v-toolbar-title>Generate password</v-toolbar-title>
       </v-container>
