@@ -71,25 +71,37 @@
           </v-col>
         </v-row>
       </v-card-text>
-      
-      <v-alert prominent class="ma-2 mb-6" color="grey lighten-3">
-        <v-row align="center">
-          <v-col class="grow">
-            <span class="password">{{ id }}</span>
-          </v-col>
-          <v-col class="shrink d-flex">
-            <v-btn class="mr-2" color="primary" @click="generate()">
-              Regénérer
-              <v-icon dense right>mdi-refresh</v-icon>
-            </v-btn>
-            <v-btn v-if="canCopy" @click="copy(id)">
-              Copier
-              <v-icon dense right>mdi-content-copy</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-alert>
 
+      <v-card-text>
+        <label class="mb-6">Robustesse</label>
+        <v-progress-linear 
+          class="progress"
+          :class="{ 'poor': score <= 30, 'fair': score > 30 && score <= 60, 'good': score > 60 && score <= 80, 'excellent': score > 80 }" 
+          height="10" 
+          v-model="score">
+        </v-progress-linear>
+      </v-card-text>
+    
+      <v-card-text>
+        <v-alert color="grey lighten-4">
+          <v-row align="center">
+            <v-col class="grow">
+              <span class="password">{{ password }}</span>
+            </v-col>
+            <v-col class="shrink d-flex">
+              <v-btn class="mr-2" color="primary" @click="generate()">
+                Regénérer
+                <v-icon dense right>mdi-refresh</v-icon>
+              </v-btn>
+              <v-btn v-if="canCopy" @click="copy(password)">
+                Copier
+                <v-icon dense right>mdi-content-copy</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-alert>
+      </v-card-text>
+      
     </v-card>
   </div>
 </template>
@@ -100,9 +112,10 @@ import shuffle from 'lodash/shuffle';
 export default {
   name: 'Generator',
   data: () => ({
-    id: '',
-    length: 10,
-    lower: 10,
+    password: '',
+    score: 0,
+    length: 6,
+    lower: 6,
     upper: 0,
     digit: 0,
     symbol: 0,
@@ -188,6 +201,27 @@ export default {
     async copy(str) {
       await navigator.clipboard.writeText(str);
     },
+    scorePassword() {
+      this.score = 0;
+      // award every unique letter until 5 repetitions
+      var letters = new Object();
+      for (var i=0; i<this.password.length; i++) {
+        letters[this.password[i]] = (letters[this.password[i]] || 0) + 1;
+        this.score += 5.0 / letters[this.password[i]];
+      }
+      // bonus points for mixing it up
+      var variations = {
+        digits: /\d/.test(this.password),
+        lower: /[a-z]/.test(this.password),
+        upper: /[A-Z]/.test(this.password),
+        nonWords: /\W/.test(this.password),
+      }
+      var variationCount = 0;
+      for (var check in variations) {
+        variationCount += (variations[check] == true) ? 1 : 0;
+      }
+      this.score += (variationCount - 1) * 10;
+    },
     getRandomUpperCase() {
       return String.fromCharCode(Math.floor(Math.random()*26)+65);
     },
@@ -215,7 +249,8 @@ export default {
       for (let i=0; i<this.symbol; i++) {
         characters.push(this.getRandomSymbol());
       }
-      this.id = shuffle(characters).join('');
+      this.password = shuffle(characters).join('');
+      this.scorePassword();
     }
   }
 }
@@ -226,5 +261,40 @@ export default {
   
   .password {
     font-family: 'Courier Prime', monospace;
+  }
+
+  .progress {
+    &.poor {
+      .v-progress-linear__background {
+        background-color: #EF5350 !important;
+      }
+      .v-progress-linear__determinate {
+        background-color: #EF5350 !important;
+      }
+    }
+    &.fair {
+      .v-progress-linear__background {
+        background-color: #FFC107 !important;
+      }
+      .v-progress-linear__determinate {
+        background-color: #FFC107 !important;
+      }
+    }
+    &.good {
+      .v-progress-linear__background {
+        background-color: #8BC34A !important;
+      }
+      .v-progress-linear__determinate {
+        background-color: #8BC34A !important;
+      }
+    }
+    &.excellent {
+      .v-progress-linear__background {
+        background-color: #4CAF50 !important;
+      }
+      .v-progress-linear__determinate {
+        background-color: #4CAF50 !important;
+      }
+    }
   }
 </style>
