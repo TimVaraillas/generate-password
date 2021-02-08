@@ -1,12 +1,6 @@
 <template>
   <div>
-    <v-card class="pa-6 pt-2" elevation="4">
-
-      <v-card-title>
-        Générer votre mot de passe
-      </v-card-title>
-
-      <v-divider class="mb-6"></v-divider>
+    <v-card elevation="0">
 
       <v-card-text>
         <v-row>
@@ -73,13 +67,23 @@
       </v-card-text>
 
       <v-card-text>
-        <label class="mb-6">Robustesse</label>
-        <v-progress-linear 
-          class="progress"
-          :class="{ 'poor': score <= 30, 'fair': score > 30 && score <= 60, 'good': score > 60 && score <= 80, 'excellent': score > 80 }" 
-          height="10" 
-          v-model="score">
-        </v-progress-linear>
+        <v-row>
+          <v-col cols="11">
+            <label class="mb-6">Robustesse</label>
+            <v-progress-linear 
+              class="progress"
+              :class="{ 'poor': score <= 30, 'fair': score > 30 && score <= 60, 'good': score > 60 && score <= 80, 'excellent': score > 80 }" 
+              height="10" 
+              v-model="score">
+            </v-progress-linear>
+          </v-col>
+          <v-col>
+            <img v-if="score <= 30" src="../assets/poor.svg" alt="poor">
+            <img v-if="score > 30 && score <= 60" src="../assets/fair.svg" alt="fair">
+            <img v-if="score > 60 && score <= 80" src="../assets/good.svg" alt="good">
+            <img v-if="score > 80" src="../assets/excellent.svg" alt="excellent">
+          </v-col>
+        </v-row>
       </v-card-text>
     
       <v-card-text>
