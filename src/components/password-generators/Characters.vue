@@ -78,10 +78,10 @@
             </v-progress-linear>
           </v-col>
           <v-col>
-            <img v-if="score <= 30" src="../assets/poor.svg" alt="poor">
-            <img v-if="score > 30 && score <= 60" src="../assets/fair.svg" alt="fair">
-            <img v-if="score > 60 && score <= 80" src="../assets/good.svg" alt="good">
-            <img v-if="score > 80" src="../assets/excellent.svg" alt="excellent">
+            <img v-if="score <= 30" src="../../assets/poor.svg" alt="poor">
+            <img v-if="score > 30 && score <= 60" src="../../assets/fair.svg" alt="fair">
+            <img v-if="score > 60 && score <= 80" src="../../assets/good.svg" alt="good">
+            <img v-if="score > 80" src="../../assets/excellent.svg" alt="excellent">
           </v-col>
         </v-row>
       </v-card-text>
@@ -122,7 +122,7 @@
 import shuffle from 'lodash/shuffle';
 
 export default {
-  name: 'Generator',
+  name: 'Characters',
   data: () => ({
     password: '',
     score: 0,
