@@ -71,17 +71,21 @@
           </v-col>
         </v-row>
       </v-card-text>
-
-      <v-alert class="ma-2 mb-6" color="grey lighten-3">
-        <span>{{ id }}</span>
+      
+      <v-alert prominent class="ma-2 mb-6" color="grey lighten-3">
+        <v-row align="center">
+          <v-col class="grow">
+            {{ id }}
+          </v-col>
+          <v-col class="shrink">
+            <v-btn dark @click="generate()">Regénérer</v-btn>
+          </v-col>
+          <v-col class="shrink">
+            <v-btn v-if="canCopy" @click="copy(id)">Copier</v-btn>
+          </v-col>
+        </v-row>
       </v-alert>
 
-
-      <v-card-actions>
-        <v-btn dark large @click="generate()">
-          Regénérer
-        </v-btn>
-      </v-card-actions>
     </v-card>
   </div>
 </template>
@@ -97,10 +101,12 @@ export default {
     lower: 10,
     upper: 0,
     digit: 0,
-    symbol: 0
+    symbol: 0,
+    canCopy: false,
   }),
   mounted() {
     this.generate();
+    this.canCopy = !!navigator.clipboard;
   },
   watch: {
     length() {
@@ -174,6 +180,9 @@ export default {
           }
         }
       }
+    },
+    async copy(str) {
+      await navigator.clipboard.writeText(str);
     },
     getRandomUpperCase() {
       return String.fromCharCode(Math.floor(Math.random()*26)+65);
