@@ -92,40 +92,7 @@
       </v-card-text>
 
       <v-card-text>
-        <v-alert color="grey lighten-4">
-          <v-row align="center">
-            <v-col class="grow">
-              <span class="password">{{ password }}</span>
-            </v-col>
-            <v-col class="shrink d-flex">
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mr-2"
-                    color="primary"
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="generatePassword()">
-                    <v-icon dense>mdi-refresh</v-icon>
-                  </v-btn>
-                </template>
-                <span>Regénérer</span>
-              </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-if="canCopy"
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="copyPassword()">
-                    <v-icon dense>mdi-content-copy</v-icon>
-                  </v-btn>
-                </template>
-                <span>Copier</span>
-              </v-tooltip>
-            </v-col>
-          </v-row>
-        </v-alert>
+        <Password :password="password" @refresh="generatePassword()" />
       </v-card-text>
 
     </v-card>
@@ -135,8 +102,13 @@
 <script>
 import shuffle from 'lodash/shuffle';
 
+import Password from '../Password.vue';
+
 export default {
   name: 'Characters',
+  components: {
+    Password,
+  },
   data: () => ({
     password: '',
     score: 0,
@@ -145,11 +117,9 @@ export default {
     upper: 0,
     digit: 0,
     symbol: 0,
-    canCopy: false,
   }),
   mounted() {
     this.generatePassword();
-    this.canCopy = !!navigator.clipboard;
   },
   watch: {
     length() {
@@ -221,11 +191,6 @@ export default {
         }
       }
     },
-
-    async copyPassword() {
-      await navigator.clipboard.writeText(this.password);
-    },
-
     setPasswordScore() {
       this.score = 0;
       // award every unique letter until 5 repetitions
