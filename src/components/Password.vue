@@ -61,3 +61,11 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+  .password {
+    font-family: 'Roboto Mono', monospace;
+  }
+</style>
