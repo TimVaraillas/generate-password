@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar 
-      app 
+    <v-app-bar
+      app
       dark
       flat
       absolute
@@ -51,14 +51,14 @@
 </template>
 
 <script>
-import Characters from './components/password-generators/Characters';
-import Words from './components/password-generators/Words';
+import Characters from './components/password-generators/Characters.vue';
+import Words from './components/password-generators/Words.vue';
 
 export default {
   name: 'App',
   components: {
     Characters,
-    Words
+    Words,
   },
   data: () => ({
     tab: null,

@@ -70,10 +70,15 @@
         <v-row>
           <v-col cols="11">
             <label class="mb-6">Robustesse</label>
-            <v-progress-linear 
+            <v-progress-linear
               class="progress"
-              :class="{ 'poor': score <= 30, 'fair': score > 30 && score <= 60, 'good': score > 60 && score <= 80, 'excellent': score > 80 }" 
-              height="10" 
+              :class="{
+                'poor': score <= 30,
+                'fair': score > 30 && score <= 60,
+                'good': score > 60 && score <= 80,
+                'excellent': score > 80
+              }"
+              height="10"
               v-model="score">
             </v-progress-linear>
           </v-col>
@@ -85,7 +90,7 @@
           </v-col>
         </v-row>
       </v-card-text>
-    
+
       <v-card-text>
         <v-alert color="grey lighten-4">
           <v-row align="center">
@@ -95,7 +100,12 @@
             <v-col class="shrink d-flex">
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn class="mr-2" color="primary" v-bind="attrs" v-on="on" @click="generatePassword()">
+                  <v-btn
+                    class="mr-2"
+                    color="primary"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="generatePassword()">
                     <v-icon dense>mdi-refresh</v-icon>
                   </v-btn>
                 </template>
@@ -103,7 +113,11 @@
               </v-tooltip>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-if="canCopy" v-bind="attrs" v-on="on" @click="copyPassword()">
+                  <v-btn
+                    v-if="canCopy"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="copyPassword()">
                     <v-icon dense>mdi-content-copy</v-icon>
                   </v-btn>
                 </template>
@@ -113,7 +127,7 @@
           </v-row>
         </v-alert>
       </v-card-text>
-      
+
     </v-card>
   </div>
 </template>
@@ -140,7 +154,7 @@ export default {
   watch: {
     length() {
       if (this.total < this.length) {
-        this.increment()
+        this.increment();
       }
       if (this.total > this.length) {
         this.decrement();
@@ -181,35 +195,29 @@ export default {
   computed: {
     total() {
       return this.lower + this.upper + this.digit + this.symbol;
-    }, 
+    },
     maxValue() {
-      return [ 
-        { label: 'upper', value: this.upper }, 
-        { label: 'digit', value: this.digit }, 
-        { label: 'symbol', value: this.symbol }
-      ].sort((a, b) => {
-        return b.value - a.value
-      });
-    }
+      return [
+        { label: 'upper', value: this.upper },
+        { label: 'digit', value: this.digit },
+        { label: 'symbol', value: this.symbol },
+      ].sort((a, b) => b.value - a.value);
+    },
   },
   methods: {
     increment() {
-      while (this.total != this.length) {
-        this.lower ++;
+      while (this.total !== this.length) {
+        this.lower += 1;
       }
     },
     decrement(charType = null) {
-      while(this.total != this.length) {
+      while (this.total !== this.length) {
         if (this.lower > 0) {
-          this.lower--;
-        }
-        else {
-          if (charType != this.maxValue[0].label) {
-            this[this.maxValue[0].label]--;
-          }
-          else {
-            this[this.maxValue[1].label]--;
-          }
+          this.lower -= 1;
+        } else if (charType !== this.maxValue[0].label) {
+          this[this.maxValue[0].label] -= 1;
+        } else {
+          this[this.maxValue[1].label] -= 1;
         }
       }
     },
@@ -221,66 +229,66 @@ export default {
     setPasswordScore() {
       this.score = 0;
       // award every unique letter until 5 repetitions
-      var letters = new Object();
-      for (var i=0; i<this.password.length; i++) {
+      const letters = {};
+      for (let i = 0; i < this.password.length; i += 1) {
         letters[this.password[i]] = (letters[this.password[i]] || 0) + 1;
         this.score += 5.0 / letters[this.password[i]];
       }
       // bonus points for mixing it up
-      var variations = {
+      const variations = {
         digits: /\d/.test(this.password),
         lower: /[a-z]/.test(this.password),
         upper: /[A-Z]/.test(this.password),
         nonWords: /\W/.test(this.password),
-      }
-      var variationCount = 0;
-      for (var check in variations) {
-        variationCount += (variations[check] == true) ? 1 : 0;
-      }
+      };
+      let variationCount = 0;
+      Object.keys(variations).forEach((key) => {
+        variationCount += (variations[key] === true) ? 1 : 0;
+      });
       this.score += (variationCount - 1) * 10;
     },
 
     getRandomUpperCase() {
-      return String.fromCharCode(Math.floor(Math.random()*26)+65);
+      return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
     },
 
     getRandomLowerCase() {
-      return String.fromCharCode(Math.floor(Math.random()*26)+97);
+      return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
     },
 
-    getRandomDigit(){
-      return String.fromCharCode(Math.floor(Math.random()*10)+48);
+    getRandomDigit() {
+      return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
     },
 
-    getRandomSymbol(){
-      const symbol = "!@#$%^&*(){}[]=<>/,.|~?";
-      return symbol[Math.floor(Math.random()*symbol.length)];
+    getRandomSymbol() {
+      const symbol = '!@#$%^&*(){}[]=<>/,.|~?';
+      return symbol[Math.floor(Math.random() * symbol.length)];
     },
 
-    generatePassword(){
-      let characters = [];
-      for (let i=0; i<this.upper; i++) {
+    generatePassword() {
+      const characters = [];
+      for (let i = 0; i < this.upper; i += 1) {
         characters.push(this.getRandomUpperCase());
       }
-      for (let i=0; i<this.lower; i++) {
+      for (let i = 0; i < this.lower; i += 1) {
         characters.push(this.getRandomLowerCase());
       }
-      for (let i=0; i<this.digit; i++) {
+      for (let i = 0; i < this.digit; i += 1) {
         characters.push(this.getRandomDigit());
       }
-      for (let i=0; i<this.symbol; i++) {
+      for (let i = 0; i < this.symbol; i += 1) {
         characters.push(this.getRandomSymbol());
       }
       this.password = shuffle(characters).join('');
       this.setPasswordScore();
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss">
   @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-  
+
   .password {
     font-family: 'Roboto Mono', monospace;
   }
