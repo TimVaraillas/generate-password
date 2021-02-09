@@ -64,7 +64,7 @@
 
 <script>
 import shuffle from 'lodash/shuffle';
-import dictionary from '../../dictionaries';
+import dictionary from '../../dictionary';
 
 import Password from '../Password.vue';
 import Score from '../Score.vue';
